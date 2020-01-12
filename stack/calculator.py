@@ -52,24 +52,37 @@ def calculate_postfix(postfix_formula):
     return numbers.top.data
 
 
+def add_operators(postfix_formula, stack, target):
+    if stack.count == 0 or stack.top.data is opening_brace:
+        stack.push(target)
+        return postfix_formula
+
+    if operators[stack.top.data] >= operators[target]:
+        postfix_formula += stack.pop()
+
+    stack.push(target)
+
+    return postfix_formula
+
+
 def change_to_postfix_formula(infix_formula):
     infix_formula = infix_formula.strip()
     postfix_formula = ''
     stack = Stack()
-    for op in infix_formula:
-        if op.isnumeric():
-            postfix_formula += op
 
-        elif op in operators.keys():
-            postfix_formula = add_operators(postfix_formula, stack, op)
+    for target in infix_formula:
+        if target.isnumeric():
+            postfix_formula += target
 
-        elif op is opening_brace:
-            stack.push(op)
+        elif target in operators.keys():
+            postfix_formula = add_operators(postfix_formula, stack, target)
 
-        elif op is closing_brace:
+        elif target is opening_brace:
+            stack.push(target)
+
+        elif target is closing_brace:
             for operator in range(stack.count):
-                top = stack.top.data
-                if top is opening_brace:
+                if stack.top.data is opening_brace:
                     stack.pop()
                     break
                 else:
@@ -77,24 +90,6 @@ def change_to_postfix_formula(infix_formula):
 
     while stack.count > 0:
         postfix_formula += stack.pop()
-
-    return postfix_formula
-
-
-def add_operators(postfix_formula, stack, op):
-    if stack.count == 0:
-        stack.push(op)
-        return postfix_formula
-
-    if stack.top.data is opening_brace:
-        stack.push(op)
-        return postfix_formula
-
-    if operators[stack.top.data] >= operators[op]:
-        postfix_formula += stack.pop()
-        stack.push(op)
-    else:
-        stack.push(op)
 
     return postfix_formula
 
