@@ -89,7 +89,7 @@ class MyStackTestCase(unittest.TestCase):
         result = self.stack.pop()
         assert result == result
         assert self.stack.count == 2
-        assert self.stack.top == 2
+        assert self.stack.top.data == 2
 
     def test_cat(self):
         stack1 = MyStack()

@@ -7,9 +7,9 @@ Implement a function that checks if a string has correct brace pairs(i.e. (, {, 
  Input : a single line of characters.
 """
 
-from .stack import MyStack as Stack
 import unittest
 
+from .stack import MyStack as Stack
 
 braces = {
     '(': ')',
@@ -60,5 +60,4 @@ class BraceCheckTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    from .stack import MyStack
     unittest.main()
