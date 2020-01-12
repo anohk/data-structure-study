@@ -24,6 +24,7 @@ closing_brace = ')'
 
 def calculate_with_operation(operand1, operand2, operation):
     operand1, operand2 = float(operand1), float(operand2)
+
     if operation is '+':
         return operand1 + operand2
     elif operation is '-':
@@ -31,6 +32,8 @@ def calculate_with_operation(operand1, operand2, operation):
     elif operation is '*':
         return operand1 * operand2
     elif operation is '/':
+        if operand2 == 0:
+            raise Exception('DIVIDED_BY_ZERO')
         return operand1 / operand2
 
 
@@ -41,6 +44,8 @@ def calculate_postfix(postfix_formula):
         if op.isnumeric():
             numbers.push(op)
         else:
+            if numbers.count < 2:
+                raise Exception('INVALID_FORMULA')
             operand2 = numbers.pop()
             operand1 = numbers.pop()
             numbers.push(calculate_with_operation(operand1, operand2, op))
@@ -96,7 +101,12 @@ def add_operators(postfix_formula, stack, op):
 
 def calculate_infix(infix_formula):
     postfix_formula = change_to_postfix_formula(infix_formula)
-    return calculate_postfix(postfix_formula)
+    try:
+        result = calculate_postfix(postfix_formula)
+    except Exception as e:
+        return e
+    else:
+        return result
 
 
 class CalculateInfixFormulaTestCase(unittest.TestCase):
@@ -115,10 +125,16 @@ class CalculateInfixFormulaTestCase(unittest.TestCase):
         assert calculate_infix(infix_formula) == 6.2
         infix_formula = '(1 + 2) * (3 - 4) / 5'
         assert calculate_infix(infix_formula) == -0.6
-    #     infix_formula = '1 + +2'
-    #     assert calculate_infix(infix_formula) == 'INVALID_FORMULA'
-    #     infix_formula = '1 / (2 - 2)'
-    #     assert calculate_infix(infix_formula) == 'DIVIDED_BY_ZERO'
+
+        infix_formula = '1 + + 2'
+        with self.assertRaises(Exception) as context:
+            calculate_infix(infix_formula)
+            assert context.exception == 'INVALID_FORMULA'
+
+        infix_formula = '1 / (2 - 2)'
+        with self.assertRaises(Exception) as context:
+            calculate_infix(infix_formula)
+            assert context.exception == 'DIVIDED_BY_ZERO'
 
 
 if __name__ == '__main__':
