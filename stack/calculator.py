@@ -131,6 +131,16 @@ class CalculateInfixFormulaTestCase(unittest.TestCase):
             calculate_infix(infix_formula)
             assert context.exception == 'DIVIDED_BY_ZERO'
 
+    # TODO: 이 케이스들에 대해서  postfix_formula 변환 테스트도 작성
+    def test_calculate_only_close_bracket(self):
+        infix_formula = "3)"
+        with self.assertRaises(Exception) as context:
+            calculate_infix(infix_formula)
+            assert context.exception == 'INVALID_FORMULA'
+
+    def test_calculate_only_number(self):
+        infix_formula = "3"
+        assert calculate_infix(infix_formula) == 3 
 
 if __name__ == '__main__':
     unittest.main()

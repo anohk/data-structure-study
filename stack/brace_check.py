@@ -24,6 +24,7 @@ def check_brace(input_string):
         if char in braces.keys():
             stack.push(char)
         elif char in braces.values():
+            # TODO: 아주 약간이라도 더 퍼포먼스를 늘릴 수 있는 방식은?
             if stack.count > 0 and char == braces[stack.top.data]:
                 stack.pop()
             elif stack.count == 0 or char != braces[stack.top.data]:
