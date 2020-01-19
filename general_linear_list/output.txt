@@ -1,0 +1,39 @@
+
+####################
+# Insert dummy data
+
+####################
+# Iterate elements
+[320001] : KyoungJoo
+[320002] : SorrowBeaver
+[320003] : Beaver
+[320004] : anohk
+[320005] : anyoung
+
+####################
+# Print with email
+[jkj8790@gmail.com] : KyoungJoo
+[sorrowbeaver@gmail.com] : SorrowBeaver
+[beaver@gmail.com] : Beaver
+[anohk@gmail.com] : anohk
+[anyoung@gmail.com] : anyoung
+
+####################
+# Search elements
+Student found (key: 320001)
+[320001] : KyoungJoo
+Student found (key: 320003)
+[320003] : Beaver
+Search failed (key: 120001)
+
+####################
+# Remove elements
+Erase succeeded (key: 320001)
+Erase succeeded (key: 320005)
+Erase succeeded (key: 320003)
+Erase succeeded (key: 320004)
+Erase succeeded (key: 320002)
+
+####################
+# List empty check
+Empty
