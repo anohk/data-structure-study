@@ -4,7 +4,7 @@ createQueue: create a circular queue.
 enqueue: queue insert.
 dequeue: queue delete.
 queueFront: retrieve the data at the front.
-queueCount: return the number of elements in the queue. destroyQueue
+queueCount: return the number of elements in the queue.
 
 Example:
     Q1 = createQueue(); enqueue(Q1, 10); enqueue(Q1, 20); enqueue(Q1, 30);
@@ -22,79 +22,68 @@ class Node:
 
 
 class Queue:
-    def __init__(self, node=None):
-        self.rear = node
+    def __init__(self):
+        self.rear = None
         self.front = None
         self.count = 0
 
+    def enqueue(self, value):
+        node = Node(value)
+        if self.count == 0:
+            self.rear = node
+            self.front = node
+        else:
+            node.before_node = self.rear
+            self.rear.next_node = node
+            self.rear = node
+        self.count += 1
 
-def enqueue(queue, value):
-    node = Node(value)
-    if get_queue_count(queue) == 0:
-        queue.rear = node
-        queue.front = node
-    else:
-        node.before_node = queue.rear
-        queue.rear.next_node = node
-        queue.rear = node
-    queue.count += 1
+    def dequeue(self):
+        if self.count == 0:
+            raise Exception('큐가 비어있습니다.')
+        elif self.count == 1:
+            result = self.rear.value
+            self.rear = None
+            self.front = None
+        else:
+            result = self.rear.value
+            self.rear = self.rear.before_node
+            self.rear.next_node = None
+        self.count -= 1
+        return result
 
+    def get_queue_front(self):
+        if self.front:
+            return self.front.value
+        else:
+            raise
 
-def dequeue(queue):
-    if get_queue_count(queue) == 0:
-        raise Exception('큐가 비어있습니다.')
-    else:
-        result = queue.rear.value
-        if get_queue_count(queue) > 1:
-            queue.rear = queue.rear.before_node
-        queue.rear.next_node = None
-    queue.count -= 1
-    return result
-
-
-def get_queue_front(queue):
-    return queue.front.value
-
-
-def get_queue_count(queue):
-    return queue.count
-
-
-def destroy_queue(queue):
-    while get_queue_count(queue) > 0:
-        dequeue(queue)
+    def get_queue_count(self):
+        return self.count
 
 
 class QueueTestCase(unittest.TestCase):
 
     def test_enqueue(self):
         q1 = Queue()
-        enqueue(q1, 10)
-        enqueue(q1, 20)
-        enqueue(q1, 30)
+        q1.enqueue(10)
+        q1.enqueue(20)
+        q1.enqueue(30)
 
-        assert get_queue_count(q1) == 3
-        assert get_queue_front(q1) == 10
+        assert q1.get_queue_count() == 3
+        assert q1.get_queue_front() == 10
         assert q1.rear.value == 30
 
     def test_dequeue(self):
         q1 = Queue()
         for value in range(1, 5):
-            enqueue(q1, value)
-        assert get_queue_count(q1) == 4
+            q1.enqueue(value)
+        assert q1.get_queue_count() == 4
 
-        assert dequeue(q1) == 4
-        assert dequeue(q1) == 3
-        assert dequeue(q1) == 2
-        assert dequeue(q1) == 1
+        assert q1.dequeue() == 4
+        assert q1.dequeue() == 3
+        assert q1.dequeue() == 2
+        assert q1.dequeue() == 1
         with self.assertRaises(Exception):
-            dequeue(q1)
-
-    def test_destroy(self):
-        q1 = Queue()
-        for value in range(1, 5):
-            enqueue(q1, value)
-        assert get_queue_count(q1) == 4
-
-        destroy_queue(q1)
-        assert get_queue_count(q1) == 0
+            q1.dequeue()
+        assert q1.get_queue_count() == 0
