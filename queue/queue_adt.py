@@ -23,7 +23,7 @@ class Node:
 
 class Queue:
     def __init__(self, node=None):
-        self.top = node
+        self.rear = node
         self.front = None
         self.count = 0
 
@@ -31,23 +31,23 @@ class Queue:
 def enqueue(queue, value):
     node = Node(value)
     if get_queue_count(queue) == 0:
-        queue.top = node
+        queue.rear = node
         queue.front = node
     else:
-        node.before_node = queue.top
-        queue.top.next_node = node
-        queue.top = node
+        node.before_node = queue.rear
+        queue.rear.next_node = node
+        queue.rear = node
     queue.count += 1
 
 
 def dequeue(queue):
     if get_queue_count(queue) == 0:
-        raise
+        raise Exception('큐가 비어있습니다.')
     else:
-        result = queue.top.value
+        result = queue.rear.value
         if get_queue_count(queue) > 1:
-            queue.top = queue.top.before_node
-        queue.top.next_node = None
+            queue.rear = queue.rear.before_node
+        queue.rear.next_node = None
     queue.count -= 1
     return result
 
@@ -60,14 +60,41 @@ def get_queue_count(queue):
     return queue.count
 
 
+def destroy_queue(queue):
+    while get_queue_count(queue) > 0:
+        dequeue(queue)
+
+
 class QueueTestCase(unittest.TestCase):
 
-    def test_queue(self):
-        Q1 = Queue()
-        enqueue(Q1, 10)
-        enqueue(Q1, 20)
-        enqueue(Q1, 30)
+    def test_enqueue(self):
+        q1 = Queue()
+        enqueue(q1, 10)
+        enqueue(q1, 20)
+        enqueue(q1, 30)
 
-        assert get_queue_count(Q1) == 3
-        assert dequeue(Q1) == 30
-        assert get_queue_front(Q1) == 10
+        assert get_queue_count(q1) == 3
+        assert get_queue_front(q1) == 10
+        assert q1.rear.value == 30
+
+    def test_dequeue(self):
+        q1 = Queue()
+        for value in range(1, 5):
+            enqueue(q1, value)
+        assert get_queue_count(q1) == 4
+
+        assert dequeue(q1) == 4
+        assert dequeue(q1) == 3
+        assert dequeue(q1) == 2
+        assert dequeue(q1) == 1
+        with self.assertRaises(Exception):
+            dequeue(q1)
+
+    def test_destroy(self):
+        q1 = Queue()
+        for value in range(1, 5):
+            enqueue(q1, value)
+        assert get_queue_count(q1) == 4
+
+        destroy_queue(q1)
+        assert get_queue_count(q1) == 0
