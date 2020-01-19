@@ -15,16 +15,15 @@ import unittest
 
 
 class Node:
-    def __init__(self, value, before_node=None, next_node=None):
+    def __init__(self, value, next_node=None):
         self.value = value
-        self.before_node = before_node
         self.next_node = next_node
 
 
 class Queue:
     def __init__(self):
-        self.rear = None
         self.front = None
+        self.rear = None
         self.count = 0
 
     def enqueue(self, value):
@@ -33,7 +32,6 @@ class Queue:
             self.rear = node
             self.front = node
         else:
-            node.before_node = self.rear
             self.rear.next_node = node
             self.rear = node
         self.count += 1
@@ -42,13 +40,12 @@ class Queue:
         if self.count == 0:
             raise Exception('큐가 비어있습니다.')
         elif self.count == 1:
-            result = self.rear.value
+            result = self.front.value
             self.rear = None
             self.front = None
         else:
-            result = self.rear.value
-            self.rear = self.rear.before_node
-            self.rear.next_node = None
+            result = self.front.value
+            self.front = self.front.next_node
         self.count -= 1
         return result
 
@@ -72,6 +69,7 @@ class QueueTestCase(unittest.TestCase):
 
         assert q1.get_queue_count() == 3
         assert q1.get_queue_front() == 10
+        assert q1.front.value == 10
         assert q1.rear.value == 30
 
     def test_dequeue(self):
@@ -80,10 +78,10 @@ class QueueTestCase(unittest.TestCase):
             q1.enqueue(value)
         assert q1.get_queue_count() == 4
 
-        assert q1.dequeue() == 4
-        assert q1.dequeue() == 3
-        assert q1.dequeue() == 2
         assert q1.dequeue() == 1
+        assert q1.dequeue() == 2
+        assert q1.dequeue() == 3
+        assert q1.dequeue() == 4
         with self.assertRaises(Exception):
             q1.dequeue()
         assert q1.get_queue_count() == 0
